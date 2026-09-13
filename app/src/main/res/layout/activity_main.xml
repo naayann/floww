@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Container for floating navigation -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:id="@+id/bottomNavPill"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:background="@drawable/bg_nav_pill"
+            android:elevation="0dp"
+            android:outlineProvider="background"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnPlus"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="12dp">
+
+            <ImageView
+                android:id="@+id/navHome"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="18dp"
+                android:src="@drawable/ic_nav_home"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/nav_active" />
+
+            <ImageView
+                android:id="@+id/navInbox"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="18dp"
+                android:src="@drawable/ic_nav_inbox"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/nav_inactive" />
+
+            <ImageView
+                android:id="@+id/navNotifications"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="18dp"
+                android:src="@drawable/ic_nav_notifications"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/nav_inactive" />
+
+            <ImageView
+                android:id="@+id/navProfile"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="18dp"
+                android:src="@drawable/ic_nav_layers"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/nav_inactive" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/btnPlus"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="@drawable/bg_plus_button"
+            android:elevation="0dp"
+            android:outlineProvider="background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_plus"
+                app:tint="@color/white" />
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

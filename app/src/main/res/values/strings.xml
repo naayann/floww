@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">floww</string>
+
+    <string-array name="motivational_quotes">
+        <item>Small steps every day still take you across mountains.</item>
+        <item>You don’t have to be perfect, just consistent.</item>
+        <item>Progress is progress, no matter how tiny.</item>
+        <item>Your future self is already proud of you.</item>
+        <item>One done todo is better than a hundred planned ones.</item>
+        <item>Be gentle with yourself — you’re doing better than you think.</item>
+        <item>Discipline is choosing what you want most over what you want now.</item>
+        <item>Every right swipe is a quiet victory.</item>
+        <item>You are not behind. You are exactly where you need to be.</item>
+        <item>The secret is showing up, even on the hard days.</item>
+        <item>Little by little, a little becomes a lot.</item>
+        <item>Your only competition is who you were yesterday.</item>
+        <item>Rest if you must, but never quit the small things.</item>
+        <item>Today’s effort is tomorrow’s confidence.</item>
+        <item>The only bad day is the one where you didn’t try.</item>
+    </string-array>
+</resources>
