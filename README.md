@@ -1,9 +1,9 @@
 # Floww
 
-A clean, swipe-based daily goals app designed for flow and focus.  
-Swipe right to complete, left to skip. No clutter, no accounts, fully offline.
+A clean, swipe-based daily goals app designed for flow of life.  
+No clutter, no accounts, fully offline.
 
-**Android Only**
+**Available for Android Only**
 
 ---
 
