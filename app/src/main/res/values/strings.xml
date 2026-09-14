@@ -18,4 +18,9 @@
         <item>Today’s effort is tomorrow’s confidence.</item>
         <item>The only bad day is the one where you didn’t try.</item>
     </string-array>
+    <string name="hint_swipe">slide left to skip • right to complete</string>
+    <string name="empty_done">Yayy! All done.</string>
+    <string name="empty_welcome">Welcome to floww!</string>
+    <string name="empty_first_goal">Tap the + button to add your first goal.</string>
+    <string name="empty_clear">All clear for today!</string>
 </resources>

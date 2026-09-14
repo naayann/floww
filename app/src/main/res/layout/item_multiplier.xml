@@ -1,66 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="24dp"
-    app:cardElevation="0dp">
+    android:layout_margin="6dp"
+    app:cardCornerRadius="22dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="#FFFFFF">
 
     <LinearLayout
+        android:id="@+id/cardBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp"
-        android:gravity="center"
-        android:background="@color/white">
+        android:paddingStart="18dp"
+        android:paddingTop="17dp"
+        android:paddingEnd="18dp"
+        android:paddingBottom="16dp">
 
-        <RelativeLayout
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:background="@drawable/circle_blue"
-            android:backgroundTint="#F2F2F7"
-            android:gravity="center">
+        <!-- Top row: emoji + primary metric -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
+            <!-- Emoji -->
             <TextView
                 android:id="@+id/tvEmoji"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="💍"
+                android:textSize="23sp" />
+
+            <!-- Flexible space -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <!-- Primary metric -->
+            <TextView
+                android:id="@+id/tvMultiplier"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="💍"
-                android:textSize="28sp" />
-        </RelativeLayout>
+                android:fontFamily="sans-serif"
+                android:includeFontPadding="false"
+                android:letterSpacing="-0.045"
+                android:text="13x"
+                android:textColor="#111111"
+                android:textSize="32sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tvMultiplier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="13"
-            android:textColor="@color/text_primary"
-            android:textSize="32sp"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-black" />
+        </LinearLayout>
 
+        <!-- Title -->
         <TextView
             android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Beach items"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:layout_marginTop="13dp"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
             android:maxLines="1"
-            android:ellipsize="end" />
+            android:text="Beach items"
+            android:textColor="#18181B"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
+        <!-- Secondary information -->
         <TextView
             android:id="@+id/tvSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="completed"
-            android:textColor="@color/text_secondary"
+            android:layout_marginTop="5dp"
+            android:includeFontPadding="false"
+            android:text="my activity"
+            android:textColor="#8E8E93"
             android:textSize="12sp" />
 
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>

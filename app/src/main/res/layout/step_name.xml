@@ -1,53 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="start">
 
+    <!-- Small overline -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome"
+        android:text="STEP 1 OF 3"
+        android:textSize="12sp"
+        android:textAllCaps="true"
+        android:letterSpacing="0.12"
+        android:textColor="#9CA3AF"
+        android:fontFamily="sans-serif-medium" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="What should we\ncall you?"
+        android:lineSpacingExtra="4dp"
         style="@style/IOSLargeTitle" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="What should we call you?"
-        style="@style/IOSHeadline" />
+        android:text="This name will appear on floow profile."
+        style="@style/IOSBody"
+        android:alpha="0.65" />
 
+    <!-- Input with floating label feel -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="This is how you’ll appear in Floow."
-        style="@style/IOSBody" />
+        android:layout_marginTop="48dp"
+        android:text="Your name"
+        android:textSize="13sp"
+        android:textColor="#6B7280"
+        android:fontFamily="sans-serif-medium" />
 
     <EditText
         android:id="@+id/etName"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_marginTop="40dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/bg_rounded_edit"
-        android:hint="Name"
+        android:hint="e.g. Alex"
         android:paddingHorizontal="20dp"
-        android:textSize="18sp"
+        android:textSize="17sp"
         android:fontFamily="sans-serif-medium"
-        android:inputType="textPersonName"
+        android:textColorHint="#C0C5CE"
+        android:inputType="textPersonName|textCapWords"
         android:maxLines="1" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnContinue"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_marginTop="32dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="36dp"
         android:text="Continue"
         android:textAllCaps="false"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold"
-        android:backgroundTint="@color/button_dark"
-        app:cornerRadius="18dp"
-        xmlns:app="http://schemas.android.com/apk/res-auto" />
+        android:letterSpacing="0.02"
+        android:backgroundTint="@color/black"
+        app:cornerRadius="16dp"
+        app:elevation="0dp" />
+
 </LinearLayout>
