@@ -40,7 +40,7 @@ public class SoundManager {
     }
 
     public static void playWelcome(Context context) {
-        playSound(context, R.raw.welcome, 1.0f); // 1.0 is full, welcome is boosted (assumed original was lower)
+        playSound(context, R.raw.new_welcome, 1.0f); // 1.0 is full, welcome is boosted (assumed original was lower)
     }
 
     public static void playTap(Context context) {
@@ -54,7 +54,7 @@ public class SoundManager {
     }
 
     public static void playThrow(Context context) {
-        playSound(context, R.raw.delete_sound, 0.8f);
+        playSound(context, R.raw.done, 0.8f);
         vibrate(context, 30);
     }
 
