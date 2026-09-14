@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -37,7 +38,7 @@ public class TodayFragment extends Fragment {
 
     private FrameLayout cardStackContainer;
     private LinearLayout emptyState;
-    private TextView tvEmptyTitle, tvEmptyQuote;
+    private TextView tvEmptyTitle, tvEmptyQuote, tvHint;
     private View tutorialOverlay;
     private TodoDao dao;
     private PrefHelper pref;
@@ -61,6 +62,7 @@ public class TodayFragment extends Fragment {
         emptyState = view.findViewById(R.id.emptyState);
         tvEmptyTitle = view.findViewById(R.id.tvEmptyTitle);
         tvEmptyQuote = view.findViewById(R.id.tvEmptyQuote);
+        tvHint = view.findViewById(R.id.tvHint);
         tutorialOverlay = view.findViewById(R.id.tutorialOverlay);
 
         cardStackContainer.setClipChildren(false);
@@ -88,10 +90,12 @@ public class TodayFragment extends Fragment {
         cardStackContainer.removeAllViews();
 
         if (pending.isEmpty()) {
+            tvHint.setVisibility(View.GONE);
             showEmptyState();
             return;
         }
 
+        tvHint.setVisibility(View.VISIBLE);
         emptyState.setVisibility(View.GONE);
         int count = Math.min(pending.size(), 3);
         for (int i = count - 1; i >= 0; i--) {
@@ -109,7 +113,23 @@ public class TodayFragment extends Fragment {
         title.setText(todo.title);
 
         try {
-            root.setBackgroundColor(Color.parseColor(todo.bgColor));
+            int baseColor = Color.parseColor(todo.bgColor);
+            float[] hsv = new float[3];
+            Color.colorToHSV(baseColor, hsv);
+            hsv[2] *= 0.8f; // Darken for gradient
+            int darkColor = Color.HSVToColor(hsv);
+            
+            GradientDrawable gd = new GradientDrawable(
+                    GradientDrawable.Orientation.TOP_BOTTOM,
+                    new int[] {baseColor, darkColor});
+            gd.setCornerRadius(0); // CardView handles corners
+            root.setBackground(gd);
+
+            // Styling the Focus for today text
+            TextView header = getView().findViewById(R.id.tvHeader);
+            if (header != null) {
+                header.setLetterSpacing(-0.02f);
+            }
         } catch (Exception e) {
             root.setBackgroundColor(Color.parseColor("#d4a373"));
         }
@@ -211,20 +231,40 @@ public class TodayFragment extends Fragment {
 
     private void showEmptyState() {
         emptyState.setVisibility(View.VISIBLE);
+        ImageView imgMascot = emptyState.findViewById(R.id.imgMascot);
+        
+        // Character level animation
+        imgMascot.setPivotY(imgMascot.getHeight());
+        imgMascot.animate()
+                .scaleX(1.1f)
+                .scaleY(0.9f)
+                .translationY(20f)
+                .rotation(5f)
+                .setDuration(600)
+                .setInterpolator(new OvershootInterpolator())
+                .withEndAction(() -> imgMascot.animate()
+                        .scaleX(1.0f)
+                        .scaleY(1.0f)
+                        .translationY(0f)
+                        .rotation(0f)
+                        .setDuration(600)
+                        .setInterpolator(new OvershootInterpolator())
+                        .start())
+                .start();
 
         String[] quotes = getResources().getStringArray(R.array.motivational_quotes);
         int dayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
         tvEmptyQuote.setText(quotes[dayOfYear % quotes.length]);
 
         if (hasClearedItemsThisSession) {
-            tvEmptyTitle.setText("Yayy! All done.");
+            tvEmptyTitle.setText(R.string.empty_done);
         } else {
             // Check if there are ANY todos at all
             if (dao.getTodoCount() == 0) {
-                tvEmptyTitle.setText("Welcome to Floow!");
-                tvEmptyQuote.setText("Tap the + button to add your first goal.");
+                tvEmptyTitle.setText(R.string.empty_welcome);
+                tvEmptyQuote.setText(R.string.empty_first_goal);
             } else {
-                tvEmptyTitle.setText("All clear for today!");
+                tvEmptyTitle.setText(R.string.empty_clear);
             }
         }
     }

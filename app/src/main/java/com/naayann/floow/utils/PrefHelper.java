@@ -38,4 +38,12 @@ public class PrefHelper {
     public boolean isTutorialDone() {
         return sp.getBoolean("tutorial_done", false);
     }
+
+    public void setNotificationsEnabled(boolean enabled) {
+        sp.edit().putBoolean("notifications_enabled", enabled).apply();
+    }
+
+    public boolean areNotificationsEnabled() {
+        return sp.getBoolean("notifications_enabled", true);
+    }
 }

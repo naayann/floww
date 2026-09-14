@@ -27,7 +27,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_nav_notifications)
-                .setContentTitle("Floow Reminder")
+                .setContentTitle("floww Reminder")
                 .setContentText("Don't forget to focus on your goals today! ✨")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true);
@@ -38,7 +38,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
     private void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Floow General";
+            CharSequence name = "floww General";
             String description = "Daily reminders and goal updates";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);

@@ -85,7 +85,7 @@ public class OnboardingActivity extends AppCompatActivity {
                     SoundManager.playTap(this);
                     goal = et.getText().toString().trim();
                     if (TextUtils.isEmpty(goal)) {
-                        Toast.makeText(this, "Enter your life goal", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Enter your goal", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     pref.saveUser(name, age, goal);

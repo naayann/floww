@@ -11,7 +11,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.naayann.floow.R;
 import com.naayann.floow.NotificationReceiver;
+import com.naayann.floow.MainActivity;
+import com.naayann.floow.utils.PrefHelper;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.naayann.floow.utils.PrefHelper;
+
 import android.content.Intent;
 
 public class NotificationsFragment extends Fragment {
@@ -24,17 +28,24 @@ public class NotificationsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_notifications, container, false);
         
         prefs = requireContext().getSharedPreferences("floow_settings", Context.MODE_PRIVATE);
+        PrefHelper prefHelper = new PrefHelper(requireContext());
         
         SwitchMaterial switchDaily = v.findViewById(R.id.switchDaily);
         SwitchMaterial switchGoals = v.findViewById(R.id.switchGoals);
         SwitchMaterial switchMascot = v.findViewById(R.id.switchMascot);
         
-        switchDaily.setChecked(prefs.getBoolean("daily_reminders", true));
+        switchDaily.setChecked(prefHelper.areNotificationsEnabled());
         switchGoals.setChecked(prefs.getBoolean("goal_completion", true));
         switchMascot.setChecked(prefs.getBoolean("mascot_messages", true));
         
-        switchDaily.setOnCheckedChangeListener((buttonView, isChecked) -> 
-            prefs.edit().putBoolean("daily_reminders", isChecked).apply());
+        switchDaily.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            prefHelper.setNotificationsEnabled(isChecked);
+            if (isChecked) {
+                MainActivity.scheduleNotifications(requireContext());
+            } else {
+                MainActivity.cancelNotifications(requireContext());
+            }
+        });
             
         switchGoals.setOnCheckedChangeListener((buttonView, isChecked) -> 
             prefs.edit().putBoolean("goal_completion", isChecked).apply());

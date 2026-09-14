@@ -2,6 +2,7 @@ package com.naayann.floow.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -37,8 +38,7 @@ public class ProfileFragment extends Fragment {
 
     private TodoDao dao;
     private PrefHelper pref;
-    private RecyclerView rv;
-    private TextView tvGreeting, tvDate, tvUserName, tvLifeGoal, tvStreak, tvEnergyValue, tvFocusValue;
+    private TextView tvGreeting, tvDate, tvUserName, tvStreak;
 
     @Nullable
     @Override
@@ -57,21 +57,16 @@ public class ProfileFragment extends Fragment {
         tvDate = view.findViewById(R.id.tvDate);
         tvUserName = view.findViewById(R.id.tvUserName);
         tvStreak = view.findViewById(R.id.tvStreak);
-        tvEnergyValue = view.findViewById(R.id.tvEnergyValue);
-        tvFocusValue = view.findViewById(R.id.tvFocusValue);
-        rv = view.findViewById(R.id.rvMultipliers);
 
         view.findViewById(R.id.btnStartFocus).setOnClickListener(v -> {
             SoundManager.playFahh(requireContext());
             Toast.makeText(requireContext(), "Focus session coming soon! 🚀", Toast.LENGTH_SHORT).show();
         });
             
-        view.findViewById(R.id.btnViewAll).setOnClickListener(v -> {
+        view.findViewById(R.id.btnViewProgress).setOnClickListener(v -> {
             SoundManager.playTap(requireContext());
-            showManageDialog();
+            startActivity(new Intent(requireContext(), ProgressActivity.class));
         });
-
-        rv.setLayoutManager(new GridLayoutManager(requireContext(), 2));
 
         refresh();
     }
@@ -85,46 +80,15 @@ public class ProfileFragment extends Fragment {
         tvUserName.setText(pref.getName());
 
         List<TodoEntity> all = dao.getAllTodos();
-        List<MultiplierAdapter.Item> items = new ArrayList<>();
         int totalCompletions = 0;
         for (TodoEntity t : all) {
-            int count = dao.getCompletionCount(t.id);
-            items.add(new MultiplierAdapter.Item(t, count));
-            totalCompletions += count;
+            totalCompletions += dao.getCompletionCount(t.id);
         }
-        rv.setAdapter(new MultiplierAdapter(items));
         
         // Mocking some stats based on completions
         tvStreak.setText(String.valueOf(totalCompletions + 7)); // Just to make it look active
-        tvEnergyValue.setText(Math.min(100, 50 + totalCompletions * 2) + "%");
-        tvFocusValue.setText(Math.min(100, 60 + totalCompletions * 3) + "%");
     }
 
-    public void showManageDialog() {
-        // Keep the old manage dialog logic if needed, but updated
-        List<TodoEntity> todos = dao.getAllTodos();
-        String[] titles = new String[todos.size()];
-        for (int i = 0; i < todos.size(); i++) {
-            titles[i] = todos.get(i).emoji + "  " + todos.get(i).title;
-        }
-
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Manage Goals")
-                .setItems(titles, (d, which) -> {
-                    SoundManager.playTap(requireContext());
-                    new AlertDialog.Builder(requireContext())
-                            .setMessage("Delete \"" + todos.get(which).title + "\"?")
-                            .setPositiveButton("Delete", (d2, w) -> {
-                                SoundManager.playThrow(requireContext());
-                                dao.deleteTodo(todos.get(which));
-                                refresh();
-                            })
-                            .setNegativeButton("Cancel", (d2, w) -> SoundManager.playTap(requireContext()))
-                            .show();
-                })
-                .setNegativeButton("Close", (d, w) -> SoundManager.playTap(requireContext()))
-                .show();
-    }
 
     @Override
     public void onResume() {

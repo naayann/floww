@@ -1,17 +1,23 @@
 package com.naayann.floow;
 
+import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+
 import com.naayann.floow.data.AppDatabase;
 import com.naayann.floow.data.TodoDao;
 import com.naayann.floow.data.TodoEntity;
@@ -22,6 +28,8 @@ import com.naayann.floow.ui.TodayFragment;
 import com.naayann.floow.utils.SoundManager;
 import com.google.android.material.button.MaterialButton;
 import com.naayann.floow.utils.PrefHelper;
+
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,10 +56,18 @@ public class MainActivity extends AppCompatActivity {
         loadFragment(new TodayFragment());
         highlight(navHome);
 
+        if (new PrefHelper(this).areNotificationsEnabled()) {
+            scheduleNotifications(this);
+        }
+
         navHome.setOnClickListener(v -> {
             SoundManager.playTap(this);
             loadFragment(new TodayFragment());
             highlight(navHome);
+
+        if (new PrefHelper(this).areNotificationsEnabled()) {
+            scheduleNotifications(this);
+        }
         });
 
         navInbox.setOnClickListener(v -> {
@@ -73,9 +89,28 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnPlus.setOnClickListener(v -> {
-            SoundManager.playTap(this);
-            showAddDialog();
+            SoundManager.playDone(this);
+            // MacBook like animation: Scale up from button
+            v.animate().scaleX(0.8f).scaleY(0.8f).setDuration(100).withEndAction(() -> {
+                v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100).start();
+                showAddDialog();
+            }).start();
         });
+    }
+
+    public static void scheduleNotifications(Context context) {
+        PeriodicWorkRequest request = new PeriodicWorkRequest.Builder(
+                NotificationWorker.class, 3, TimeUnit.HOURS)
+                .addTag("notification_work")
+                .build();
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+                "notification_work",
+                ExistingPeriodicWorkPolicy.KEEP,
+                request);
+    }
+
+    public static void cancelNotifications(Context context) {
+        WorkManager.getInstance(context).cancelAllWorkByTag("notification_work");
     }
 
     private void loadFragment(Fragment fragment) {
@@ -159,7 +194,13 @@ public class MainActivity extends AppCompatActivity {
 
         btnClose.setOnClickListener(view -> {
             SoundManager.playTap(this);
-            dialog.dismiss();
+            v.animate()
+                    .alpha(0f)
+                    .scaleX(0.7f)
+                    .scaleY(0.7f)
+                    .setDuration(300)
+                    .withEndAction(dialog::dismiss)
+                    .start();
         });
         
         btnSave.setOnClickListener(view -> {
@@ -178,10 +219,28 @@ public class MainActivity extends AppCompatActivity {
                 ((TodayFragment) current).onResume();
             }
             
-            dialog.dismiss();
+            v.animate()
+                    .alpha(0f)
+                    .scaleX(0.7f)
+                    .scaleY(0.7f)
+                    .setDuration(300)
+                    .withEndAction(dialog::dismiss)
+                    .start();
         });
 
         dialog.show();
+
+        // MacBook-like open animation
+        v.setAlpha(0f);
+        v.setScaleX(0.7f);
+        v.setScaleY(0.7f);
+        v.animate()
+                .alpha(1f)
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(400)
+                .setInterpolator(new OvershootInterpolator(1.2f))
+                .start();
     }
 
     private boolean isEmoji(String s) {

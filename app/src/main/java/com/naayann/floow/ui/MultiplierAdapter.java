@@ -1,5 +1,6 @@
 package com.naayann.floow.ui;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +20,19 @@ public class MultiplierAdapter extends RecyclerView.Adapter<MultiplierAdapter.VH
         public Item(TodoEntity t, int c) { todo = t; count = c; }
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(Item item);
+    }
+
     private final List<Item> items;
+    private OnItemClickListener listener;
 
     public MultiplierAdapter(List<Item> items) {
         this.items = items;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -38,6 +48,17 @@ public class MultiplierAdapter extends RecyclerView.Adapter<MultiplierAdapter.VH
         h.emoji.setText(item.todo.emoji);
         h.title.setText(item.todo.title);
         h.multiplier.setText(String.valueOf(item.count));
+
+        try {
+            int color = Color.parseColor(item.todo.bgColor);
+            h.itemView.findViewById(R.id.cardBackground).setBackgroundColor(color);
+        } catch (Exception e) {
+            h.itemView.findViewById(R.id.cardBackground).setBackgroundColor(Color.WHITE);
+        }
+
+        h.itemView.setOnClickListener(v -> {
+            if (listener != null) listener.onItemClick(item);
+        });
     }
 
     @Override
