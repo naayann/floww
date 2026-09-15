@@ -21,7 +21,6 @@ No clutter, no accounts, fully offline.
 
 ## Screenshots
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/92bd9498-17c0-490d-b5e6-4653544d1bb1" width="220" />
   <img src="https://github.com/user-attachments/assets/30095e82-84b1-4b37-98b6-34e29cb8721b" width="220" />
   <img src="https://github.com/user-attachments/assets/f849f183-c7c4-4c41-b1d1-a8fdada304a5" width="220" />
   <img src="https://github.com/user-attachments/assets/c2cce0e9-552e-46df-90ef-a5e6d2c7c31c" width="220" />
