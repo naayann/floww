@@ -47,12 +47,12 @@
                 app:tint="@color/nav_active" />
 
             <ImageView
-                android:id="@+id/navInbox"
+                android:id="@+id/navJournal"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:padding="18dp"
-                android:src="@drawable/ic_nav_inbox"
+                android:src="@drawable/ic_nav_journal"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 app:tint="@color/nav_inactive" />
 

@@ -5,9 +5,10 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {TodoEntity.class, CompletionEntity.class}, version = 1)
+@Database(entities = {TodoEntity.class, CompletionEntity.class, JournalEntity.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract TodoDao todoDao();
+    public abstract JournalDao journalDao();
 
     private static volatile AppDatabase INSTANCE;
 
@@ -17,7 +18,8 @@ public abstract class AppDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, "floow_db")
-                            .allowMainThreadQueries() // simple for this app size
+                            .allowMainThreadQueries()
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }

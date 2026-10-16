@@ -26,7 +26,7 @@ import androidx.work.WorkManager;
 import com.naayann.floow.data.AppDatabase;
 import com.naayann.floow.data.TodoDao;
 import com.naayann.floow.data.TodoEntity;
-import com.naayann.floow.ui.InboxFragment;
+import com.naayann.floow.ui.JournalFragment;
 import com.naayann.floow.ui.NotificationsFragment;
 import com.naayann.floow.ui.ProfileFragment;
 import com.naayann.floow.ui.TodayFragment;
@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ImageView navHome, navInbox, navNotifications, navProfile;
+    private ImageView navHome, navJournal, navNotifications, navProfile;
     private View btnPlus;
     private TodoDao dao;
 
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         dao = AppDatabase.getInstance(this).todoDao();
 
         navHome = findViewById(R.id.navHome);
-        navInbox = findViewById(R.id.navInbox);
+        navJournal = findViewById(R.id.navJournal);
         navNotifications = findViewById(R.id.navNotifications);
         navProfile = findViewById(R.id.navProfile);
         btnPlus = findViewById(R.id.btnPlus);
@@ -81,10 +81,10 @@ public class MainActivity extends AppCompatActivity {
         }
         });
 
-        navInbox.setOnClickListener(v -> {
+        navJournal.setOnClickListener(v -> {
             SoundManager.playTap(this);
-            loadFragment(new InboxFragment());
-            highlight(navInbox);
+            loadFragment(new JournalFragment());
+            highlight(navJournal);
         });
 
         navNotifications.setOnClickListener(v -> {
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         int inactiveColor = getResources().getColor(R.color.nav_inactive);
         
         navHome.setColorFilter(inactiveColor);
-        navInbox.setColorFilter(inactiveColor);
+        navJournal.setColorFilter(inactiveColor);
         navNotifications.setColorFilter(inactiveColor);
         navProfile.setColorFilter(inactiveColor);
         

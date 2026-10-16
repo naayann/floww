@@ -58,8 +58,16 @@ public class ProgressActivity extends AppCompatActivity {
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
                 ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, 0) {
+
             @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            public boolean isLongPressDragEnabled() {
+                return false; // removes the long-press delay
+            }
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
                 int fromPosition = viewHolder.getAbsoluteAdapterPosition();
                 int toPosition = target.getAbsoluteAdapterPosition();
                 adapter.onItemMove(fromPosition, toPosition);
@@ -67,8 +75,11 @@ public class ProgressActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {}
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            }
         });
+
         itemTouchHelper.attachToRecyclerView(rv);
+        adapter.setItemTouchHelper(itemTouchHelper); // pass helper to adapter
     }
 }

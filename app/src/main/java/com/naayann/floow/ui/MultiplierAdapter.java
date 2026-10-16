@@ -2,10 +2,12 @@ package com.naayann.floow.ui;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import com.naayann.floow.R;
 import com.naayann.floow.data.TodoEntity;
@@ -17,7 +19,10 @@ public class MultiplierAdapter extends RecyclerView.Adapter<MultiplierAdapter.VH
     public static class Item {
         public TodoEntity todo;
         public int count;
-        public Item(TodoEntity t, int c) { todo = t; count = c; }
+        public Item(TodoEntity t, int c) {
+            todo = t;
+            count = c;
+        }
     }
 
     public interface OnItemClickListener {
@@ -26,6 +31,7 @@ public class MultiplierAdapter extends RecyclerView.Adapter<MultiplierAdapter.VH
 
     private final List<Item> items;
     private OnItemClickListener listener;
+    private ItemTouchHelper itemTouchHelper;
 
     public MultiplierAdapter(List<Item> items) {
         this.items = items;
@@ -33,6 +39,10 @@ public class MultiplierAdapter extends RecyclerView.Adapter<MultiplierAdapter.VH
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setItemTouchHelper(ItemTouchHelper helper) {
+        this.itemTouchHelper = helper;
     }
 
     public void onItemMove(int fromPosition, int toPosition) {
@@ -65,6 +75,14 @@ public class MultiplierAdapter extends RecyclerView.Adapter<MultiplierAdapter.VH
         h.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onItemClick(item);
         });
+
+        // Start drag immediately on touch (no long-press delay)
+        h.itemView.setOnTouchListener((v, event) -> {
+            if (itemTouchHelper != null && event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                itemTouchHelper.startDrag(h);
+            }
+            return false;
+        });
     }
 
     @Override
@@ -74,6 +92,7 @@ public class MultiplierAdapter extends RecyclerView.Adapter<MultiplierAdapter.VH
 
     static class VH extends RecyclerView.ViewHolder {
         TextView emoji, title, multiplier, subtitle;
+
         VH(View v) {
             super(v);
             emoji = v.findViewById(R.id.tvEmoji);
