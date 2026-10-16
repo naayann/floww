@@ -35,6 +35,12 @@ public class MultiplierAdapter extends RecyclerView.Adapter<MultiplierAdapter.VH
         this.listener = listener;
     }
 
+    public void onItemMove(int fromPosition, int toPosition) {
+        Item item = items.remove(fromPosition);
+        items.add(toPosition, item);
+        notifyItemMoved(fromPosition, toPosition);
+    }
+
     @NonNull
     @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

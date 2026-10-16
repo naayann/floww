@@ -1,7 +1,10 @@
 package com.naayann.floow;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
@@ -51,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
         btnPlus = findViewById(R.id.btnPlus);
 
         SoundManager.playWelcome(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+            }
+        }
 
         // Default
         loadFragment(new TodayFragment());
@@ -100,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static void scheduleNotifications(Context context) {
         PeriodicWorkRequest request = new PeriodicWorkRequest.Builder(
-                NotificationWorker.class, 3, TimeUnit.HOURS)
+                NotificationWorker.class, 12, TimeUnit.HOURS)
                 .addTag("notification_work")
                 .build();
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(

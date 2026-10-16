@@ -31,4 +31,7 @@ public interface TodoDao {
 
     @Query("SELECT COUNT(*) FROM completions WHERE date = :today AND todoId = :todoId")
     int isCompletedToday(long todoId, String today);
+
+    @Query("SELECT DISTINCT date FROM completions ORDER BY date DESC")
+    List<String> getCompletionDates();
 }
