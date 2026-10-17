@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
-        android:text="Focus for today"
+        android:text="Floww."
         android:typeface="serif"
         android:textStyle="bold|italic"
         android:textSize="32sp"

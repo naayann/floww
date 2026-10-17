@@ -35,6 +35,11 @@
             android:exported="false"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.StreaksActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
         <receiver android:name=".NotificationReceiver" android:exported="false" />
         <receiver android:name=".BootReceiver" android:exported="true">
             <intent-filter>

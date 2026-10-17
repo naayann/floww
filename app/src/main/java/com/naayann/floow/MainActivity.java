@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ import androidx.work.WorkManager;
 import com.naayann.floow.data.AppDatabase;
 import com.naayann.floow.data.TodoDao;
 import com.naayann.floow.data.TodoEntity;
+import com.naayann.floow.ui.FocusFragment;
 import com.naayann.floow.ui.JournalFragment;
 import com.naayann.floow.ui.NotificationsFragment;
 import com.naayann.floow.ui.ProfileFragment;
@@ -87,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
             highlight(navJournal);
         });
 
+
+
         navNotifications.setOnClickListener(v -> {
             SoundManager.playTap(this);
             loadFragment(new NotificationsFragment());
@@ -111,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static void scheduleNotifications(Context context) {
         PeriodicWorkRequest request = new PeriodicWorkRequest.Builder(
-                NotificationWorker.class, 12, TimeUnit.HOURS)
+                NotificationWorker.class, 3, TimeUnit.HOURS)
                 .addTag("notification_work")
                 .build();
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
@@ -240,6 +244,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         dialog.show();
+
+        etEmoji.requestFocus();
+        etEmoji.post(() -> {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.showSoftInput(etEmoji, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
 
         // MacBook-like open animation
         v.setAlpha(0f);
