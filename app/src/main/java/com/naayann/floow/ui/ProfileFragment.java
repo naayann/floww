@@ -59,13 +59,22 @@ public class ProfileFragment extends Fragment {
         tvStreak = view.findViewById(R.id.tvStreak);
 
         view.findViewById(R.id.btnStartFocus).setOnClickListener(v -> {
-            SoundManager.playFahh(requireContext());
-            Toast.makeText(requireContext(), "Focus session coming soon! 🚀", Toast.LENGTH_SHORT).show();
+            SoundManager.playTap(requireContext());
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast)
+                    .replace(R.id.fragmentContainer, new FocusFragment())
+                    .commit();
         });
             
         view.findViewById(R.id.btnViewProgress).setOnClickListener(v -> {
             SoundManager.playTap(requireContext());
             startActivity(new Intent(requireContext(), ProgressActivity.class));
+        });
+
+        view.findViewById(R.id.cardStreak).setOnClickListener(v -> {
+            SoundManager.playTap(requireContext());
+            startActivity(new Intent(requireContext(), StreaksActivity.class));
         });
 
         refresh();
