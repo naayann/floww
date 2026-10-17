@@ -1,10 +1,8 @@
 package com.naayann.floow.ui;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.naayann.floow.R;
@@ -40,46 +38,24 @@ public class ProgressActivity extends AppCompatActivity {
 
         MultiplierAdapter adapter = new MultiplierAdapter(items);
         adapter.setOnItemClickListener(item -> {
+            SoundManager.playTap(this);
             new MaterialAlertDialogBuilder(this)
-                    .setTitle("Delete this goal?")
-                    .setMessage("“" + item.todo.title + "” will be permanently removed.")
+                    .setTitle("Delete task?")
+                    .setMessage("“" + item.todo.title + "” and all its completion records will be removed.")
                     .setPositiveButton("Delete", (dialog, which) -> {
                         SoundManager.playThrow(this);
+                        dao.deleteCompletionsForTodo(item.todo.id);
                         dao.deleteTodo(item.todo);
-                        items.remove(item);
-                        adapter.notifyDataSetChanged();
+                        int pos = items.indexOf(item);
+                        if (pos != -1) {
+                            items.remove(pos);
+                            adapter.notifyItemRemoved(pos);
+                            adapter.notifyItemRangeChanged(pos, items.size() - pos);
+                        }
                     })
-                    .setNegativeButton("Keep it", null)
-                    .setBackgroundInsetStart(24)
-                    .setBackgroundInsetEnd(24)
+                    .setNegativeButton("Cancel", null)
                     .show();
         });
         rv.setAdapter(adapter);
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, 0) {
-
-            @Override
-            public boolean isLongPressDragEnabled() {
-                return false; // removes the long-press delay
-            }
-
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView,
-                                  @NonNull RecyclerView.ViewHolder viewHolder,
-                                  @NonNull RecyclerView.ViewHolder target) {
-                int fromPosition = viewHolder.getAbsoluteAdapterPosition();
-                int toPosition = target.getAbsoluteAdapterPosition();
-                adapter.onItemMove(fromPosition, toPosition);
-                return true;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            }
-        });
-
-        itemTouchHelper.attachToRecyclerView(rv);
-        adapter.setItemTouchHelper(itemTouchHelper); // pass helper to adapter
     }
 }

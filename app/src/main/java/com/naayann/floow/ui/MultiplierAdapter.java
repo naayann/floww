@@ -2,17 +2,14 @@ package com.naayann.floow.ui;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import com.naayann.floow.R;
 import com.naayann.floow.data.TodoEntity;
 import java.util.List;
-import java.util.Locale;
 
 public class MultiplierAdapter extends RecyclerView.Adapter<MultiplierAdapter.VH> {
 
@@ -31,7 +28,6 @@ public class MultiplierAdapter extends RecyclerView.Adapter<MultiplierAdapter.VH
 
     private final List<Item> items;
     private OnItemClickListener listener;
-    private ItemTouchHelper itemTouchHelper;
 
     public MultiplierAdapter(List<Item> items) {
         this.items = items;
@@ -39,16 +35,6 @@ public class MultiplierAdapter extends RecyclerView.Adapter<MultiplierAdapter.VH
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
-    }
-
-    public void setItemTouchHelper(ItemTouchHelper helper) {
-        this.itemTouchHelper = helper;
-    }
-
-    public void onItemMove(int fromPosition, int toPosition) {
-        Item item = items.remove(fromPosition);
-        items.add(toPosition, item);
-        notifyItemMoved(fromPosition, toPosition);
     }
 
     @NonNull
@@ -74,14 +60,6 @@ public class MultiplierAdapter extends RecyclerView.Adapter<MultiplierAdapter.VH
 
         h.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onItemClick(item);
-        });
-
-        // Start drag immediately on touch (no long-press delay)
-        h.itemView.setOnTouchListener((v, event) -> {
-            if (itemTouchHelper != null && event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                itemTouchHelper.startDrag(h);
-            }
-            return false;
         });
     }
 

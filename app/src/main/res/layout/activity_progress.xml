@@ -17,6 +17,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_centerVertical="true"
+            android:contentDescription="Back"
             android:src="@drawable/ic_close"
             app:tint="@color/text_primary" />
 
@@ -38,5 +39,7 @@
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
