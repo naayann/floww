@@ -20,15 +20,15 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:text="What’s your\nfinal goal?"
+        android:layout_marginTop="16dp"
+        android:text="What’s your\nmain goal?"
         android:lineSpacingExtra="4dp"
         style="@style/IOSLargeTitle" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:text="This is to keep you motivated."
         style="@style/IOSBody"
         android:alpha="0.65" />
@@ -37,7 +37,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="32dp"
         android:text="Your goal"
         android:textSize="13sp"
         android:textColor="#6B7280"
@@ -46,11 +46,11 @@
     <EditText
         android:id="@+id/etGoal"
         android:layout_width="match_parent"
-        android:layout_height="110dp"
+        android:layout_height="100dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/bg_rounded_edit"
         android:hint="e.g. Become healthier, build discipline..."
-        android:padding="20dp"
+        android:padding="16dp"
         android:textSize="17sp"
         android:fontFamily="sans-serif-medium"
         android:textColorHint="#C0C5CE"
@@ -61,16 +61,14 @@
         android:id="@+id/btnContinue"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="32dp"
         android:text="Start Floow 🚀"
         android:textAllCaps="false"
         android:textSize="16sp"
         android:textStyle="bold"
         android:letterSpacing="0.02"
-        android:backgroundTint="@color/accent"
-        app:strokeWidth="1dp"
-        app:strokeColor="#E5E5EA"
-        app:cornerRadius="16dp"
+        android:backgroundTint="#FFF58220"
+        app:cornerRadius="20dp"
         app:elevation="0dp" />
 
 </LinearLayout>
