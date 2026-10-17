@@ -46,4 +46,12 @@ public class PrefHelper {
     public boolean areNotificationsEnabled() {
         return sp.getBoolean("notifications_enabled", true);
     }
+
+    public void setLastNotificationSlot(String slot) {
+        sp.edit().putString("last_notification_slot", slot).apply();
+    }
+
+    public String getLastNotificationSlot() {
+        return sp.getString("last_notification_slot", "");
+    }
 }
