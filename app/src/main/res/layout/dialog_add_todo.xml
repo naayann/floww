@@ -69,7 +69,7 @@
                 android:layout_height="56dp"
                 android:background="@drawable/bg_emoji_input"
                 android:gravity="center"
-                android:hint="️➕"
+                android:hint="✨"
                 android:inputType="textShortMessage"
                 android:textSize="24sp"
                 android:maxLength="2" />

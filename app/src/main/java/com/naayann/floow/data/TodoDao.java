@@ -20,6 +20,9 @@ public interface TodoDao {
     @Delete
     void deleteTodo(TodoEntity todo);
 
+    @Query("DELETE FROM completions WHERE todoId = :todoId")
+    void deleteCompletionsForTodo(long todoId);
+
     @Insert
     void insertCompletion(CompletionEntity completion);
 
