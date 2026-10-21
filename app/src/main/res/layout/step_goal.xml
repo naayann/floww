@@ -1,74 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="start">
 
-    <!-- Small overline -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="STEP 3 OF 3"
+        android:textColor="#FFF58220"
         android:textSize="12sp"
-        android:textAllCaps="true"
-        android:letterSpacing="0.12"
-        android:textColor="#9CA3AF"
-        android:fontFamily="sans-serif-medium" />
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="0.12" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="What do you\nwant to be?"
+        android:textColor="#FF171717"
+        android:textSize="32sp"
+        android:fontFamily="sans-serif"
+        android:textStyle="bold"
+        android:lineSpacingExtra="2dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="What’s your\nmain goal?"
-        android:lineSpacingExtra="4dp"
-        style="@style/IOSLargeTitle" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="This is to keep you motivated."
-        style="@style/IOSBody"
-        android:alpha="0.65" />
-
-    <!-- Input with floating label feel -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Your goal"
-        android:textSize="13sp"
-        android:textColor="#6B7280"
-        android:fontFamily="sans-serif-medium" />
+        android:layout_marginTop="30dp"
+        android:text="YOUR GOAL"
+        android:textColor="#FF555555"
+        android:textSize="12sp"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="0.06" />
 
     <EditText
         android:id="@+id/etGoal"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="112dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/bg_rounded_edit"
-        android:hint="e.g. Become healthier, build discipline..."
-        android:padding="16dp"
-        android:textSize="17sp"
-        android:fontFamily="sans-serif-medium"
-        android:textColorHint="#C0C5CE"
-        android:gravity="top"
-        android:inputType="textMultiLine" />
+        android:hint="e.g. Become consistent, get healthier..."
+        android:padding="18dp"
+        android:textSize="16sp"
+        android:textColor="#FF171717"
+        android:textColorHint="#FF9B9B9B"
+        android:fontFamily="sans-serif"
+        android:textStyle="bold"
+        android:gravity="top|start"
+        android:inputType="textCapSentences|textMultiLine"
+        android:scrollbars="vertical" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnContinue"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="32dp"
-        android:text="Start Floow 🚀"
+        android:layout_height="58dp"
+        android:layout_marginTop="24dp"
+        android:text="Start My Journey"
         android:textAllCaps="false"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:letterSpacing="0.02"
-        android:backgroundTint="#FFF58220"
-        app:cornerRadius="20dp"
-        app:elevation="0dp" />
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/orange_card"
+        app:cornerRadius="18dp"
+        app:elevation="0dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp" />
 
 </LinearLayout>

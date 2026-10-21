@@ -23,15 +23,17 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.button.MaterialButton;
+import com.naayann.floow.MainActivity;
 import com.naayann.floow.R;
+import com.naayann.floow.utils.PrefHelper;
 import com.naayann.floow.utils.SoundManager;
 import java.util.Locale;
 
 public class FocusFragment extends Fragment {
 
     private TextView tvHeader, tvSubtitle, tvTimer, tvStatus;
-    private MaterialButton btnStartPause, btnReset, btn15m, btn25m, btn45m, btnChooseBg, btnChooseRingtone;
-    private ImageView imgCustomBg;
+    private MaterialButton btnStartPause, btnReset, btn5m, btn15m, btn25m, btn45m, btnChooseRingtone;
+    private ImageView btnChooseBg, imgCustomBg;
     private View bgOverlay, timerCardContainer;
 
     private CountDownTimer countDownTimer;
@@ -58,7 +60,7 @@ public class FocusFragment extends Fragment {
                                 imgCustomBg.setImageURI(uri);
                                 applyCustomBackgroundStyling(true);
                             }
-                            Toast.makeText(requireContext(), "Cozy background set ✨", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireContext(), "Background set", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -83,12 +85,17 @@ public class FocusFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_focus, container, false);
 
+        if (requireActivity() instanceof MainActivity) {
+            ((MainActivity) requireActivity()).setBottomNavVisible(false);
+        }
+
         tvHeader = v.findViewById(R.id.tvHeader);
         tvSubtitle = v.findViewById(R.id.tvSubtitle);
         tvTimer = v.findViewById(R.id.tvTimer);
         tvStatus = v.findViewById(R.id.tvStatus);
         btnStartPause = v.findViewById(R.id.btnStartPause);
         btnReset = v.findViewById(R.id.btnReset);
+        btn5m = v.findViewById(R.id.btn5m);
         btn15m = v.findViewById(R.id.btn15m);
         btn25m = v.findViewById(R.id.btn25m);
         btn45m = v.findViewById(R.id.btn45m);
@@ -98,10 +105,29 @@ public class FocusFragment extends Fragment {
         bgOverlay = v.findViewById(R.id.bgOverlay);
         timerCardContainer = v.findViewById(R.id.timerCardContainer);
 
+        ImageView btnBack = v.findViewById(R.id.btnBack);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(view -> {
+                SoundManager.playTap(requireContext());
+                if (getParentFragmentManager().getBackStackEntryCount() > 0) {
+                    getParentFragmentManager().popBackStack();
+                } else if (requireActivity() instanceof MainActivity) {
+                    ((MainActivity) requireActivity()).selectHomeTab();
+                }
+            });
+        }
+
+        ImageView imgFocusMascot = v.findViewById(R.id.imgFocusMascot);
+        if (imgFocusMascot != null) {
+            PrefHelper pref = new PrefHelper(requireContext());
+            imgFocusMascot.setImageResource(pref.getMascotDrawableRes());
+        }
+
         // Preset buttons
-        btn15m.setOnClickListener(view -> setTimerDuration(15 * 60 * 1000L));
-        btn25m.setOnClickListener(view -> setTimerDuration(25 * 60 * 1000L));
-        btn45m.setOnClickListener(view -> setTimerDuration(45 * 60 * 1000L));
+        if (btn5m != null) btn5m.setOnClickListener(view -> setTimerDuration(5 * 60 * 1000L));
+        if (btn15m != null) btn15m.setOnClickListener(view -> setTimerDuration(15 * 60 * 1000L));
+        if (btn25m != null) btn25m.setOnClickListener(view -> setTimerDuration(25 * 60 * 1000L));
+        if (btn45m != null) btn45m.setOnClickListener(view -> setTimerDuration(45 * 60 * 1000L));
 
         btnStartPause.setOnClickListener(view -> {
             SoundManager.playTap(requireContext());
@@ -143,6 +169,10 @@ public class FocusFragment extends Fragment {
     }
 
     private void applyCustomBackgroundStyling(boolean hasCustomBg) {
+        View view = getView();
+        if (view == null) return;
+        ImageView btnBack = view.findViewById(R.id.btnBack);
+
         if (hasCustomBg) {
             imgCustomBg.setVisibility(View.VISIBLE);
             bgOverlay.setVisibility(View.VISIBLE);
@@ -150,6 +180,12 @@ public class FocusFragment extends Fragment {
             tvSubtitle.setTextColor(Color.parseColor("#E5E5EA"));
             tvStatus.setTextColor(Color.parseColor("#E5E5EA"));
             tvTimer.setTextColor(Color.WHITE);
+            if (btnBack != null) {
+                btnBack.setImageTintList(ColorStateList.valueOf(Color.WHITE));
+            }
+            if (btnChooseBg != null) {
+                btnChooseBg.setImageTintList(ColorStateList.valueOf(Color.WHITE));
+            }
             if (timerCardContainer != null) {
                 timerCardContainer.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4D000000")));
             }
@@ -160,6 +196,12 @@ public class FocusFragment extends Fragment {
             tvSubtitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
             tvStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
             tvTimer.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary));
+            if (btnBack != null) {
+                btnBack.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.text_primary)));
+            }
+            if (btnChooseBg != null) {
+                btnChooseBg.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.text_primary)));
+            }
             if (timerCardContainer != null) {
                 timerCardContainer.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#19FFFFFF")));
             }
@@ -184,6 +226,7 @@ public class FocusFragment extends Fragment {
             @Override
             public void onFinish() {
                 isTimerRunning = false;
+                if (!isAdded()) return;
                 tvStatus.setText("Session completed ✨");
                 btnStartPause.setText("Start Focus");
                 SoundManager.playCompleted(requireContext());
@@ -213,6 +256,9 @@ public class FocusFragment extends Fragment {
         timeLeftInMillis = 25 * 60 * 1000L;
         tvStatus.setText("Ready to focus");
         btnStartPause.setText("Start Focus");
+        if (imgCustomBg != null) {
+            imgCustomBg.setImageDrawable(null);
+        }
         applyCustomBackgroundStyling(false);
         updateTimerText();
     }
@@ -225,6 +271,7 @@ public class FocusFragment extends Fragment {
     }
 
     private void playCompletionRingtone() {
+        if (!isAdded()) return;
         try {
             Uri ringtoneUri = selectedRingtoneUri;
             if (ringtoneUri == null) {
@@ -239,6 +286,17 @@ public class FocusFragment extends Fragment {
             }
         } catch (Exception r) {
             // Handled safely
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+        if (requireActivity() instanceof MainActivity) {
+            ((MainActivity) requireActivity()).setBottomNavVisible(true);
         }
     }
 }

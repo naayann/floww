@@ -8,8 +8,9 @@
         <item name="android:navigationBarColor">@color/background</item>
         <item name="android:windowBackground">@color/background</item>
 
-        <!-- Modern Typography -->
-        <item name="fontFamily">sans-serif-medium</item>
+        <!-- Use system fallback font so layout inflation never fails if downloadable fonts fail -->
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="RoundedCard" parent="">
@@ -21,6 +22,7 @@
         <item name="android:textSize">34sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:letterSpacing">-0.02</item>
     </style>
 
@@ -28,12 +30,14 @@
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/text_primary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:letterSpacing">-0.01</item>
     </style>
 
     <style name="IOSBody">
         <item name="android:textSize">17sp</item>
         <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:fontFamily">sans-serif</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
     </style>
 </resources>

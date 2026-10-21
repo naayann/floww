@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Rounded landscape frame -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#FF2C2C2C"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M5,3.75
+            L19,3.75
+            C20.24,3.75 21,4.51 21,5.75
+            L21,18.25
+            C21,19.49 20.24,20.25 19,20.25
+            L5,20.25
+            C3.76,20.25 3,19.49 3,18.25
+            L3,5.75
+            C3,4.51 3.76,3.75 5,3.75 Z" />
+
+    <!-- Sun -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#FF2C2C2C"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android.strokeLineJoin="round"
+        android:pathData="M15.8,7.5
+            A1.7,1.7 0,1 0,19.2 7.5
+            A1.7,1.7 0,1 0,15.8 7.5" />
+
+    <!-- Mountains -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#FF2C2C2C"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M4.5,16.5
+            L8.5,11.5
+            L11.5,14.5
+            L14,12
+            L19.5,17.5" />
+
+</vector>

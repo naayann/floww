@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,11 +19,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import com.naayann.floow.MainActivity;
 import com.naayann.floow.R;
 import com.naayann.floow.data.AppDatabase;
 import com.naayann.floow.data.CompletionEntity;
-import com.naayann.floow.data.TodoEntity;
 import com.naayann.floow.data.TodoDao;
+import com.naayann.floow.data.TodoEntity;
 import com.naayann.floow.utils.PrefHelper;
 import com.naayann.floow.utils.SoundManager;
 import java.text.SimpleDateFormat;
@@ -65,38 +65,86 @@ public class TodayFragment extends Fragment {
         tvHint = view.findViewById(R.id.tvHint);
         tutorialOverlay = view.findViewById(R.id.tutorialOverlay);
 
-        cardStackContainer.setClipChildren(false);
-        cardStackContainer.setClipToPadding(false);
+        if (cardStackContainer != null) {
+            cardStackContainer.setClipChildren(false);
+            cardStackContainer.setClipToPadding(false);
+        }
 
-        dao = AppDatabase.getInstance(requireContext()).todoDao();
+        try {
+            dao = AppDatabase.getInstance(requireContext()).todoDao();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         pref = new PrefHelper(requireContext());
         today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
-        view.findViewById(R.id.btnGotIt).setOnClickListener(v -> {
-            SoundManager.playTap(requireContext());
-            tutorialOverlay.setVisibility(View.GONE);
-            pref.setTutorialDone(true);
-        });
+//        ImageView imgHeaderMascot = view.findViewById(R.id.imgHeaderMascot);
+//        if (imgHeaderMascot != null) {
+//            imgHeaderMascot.setImageResource(pref.getMascotDrawableRes());
+//        }
+
+        View btnBack = view.findViewById(R.id.btnBack);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> {
+                SoundManager.playTap(requireContext());
+                if (getParentFragmentManager().getBackStackEntryCount() > 0) {
+                    getParentFragmentManager().popBackStack();
+                } else if (requireActivity() instanceof MainActivity) {
+                    ((MainActivity) requireActivity()).selectHomeTab();
+                } else {
+                    getParentFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.fade_in_fast, R.anim.fade_out_fast)
+                            .replace(R.id.fragmentContainer, new HomeFragment())
+                            .commit();
+                }
+            });
+        }
+
+        View btnGotIt = view.findViewById(R.id.btnGotIt);
+        if (btnGotIt != null) {
+            btnGotIt.setOnClickListener(v -> {
+                SoundManager.playTap(requireContext());
+                if (tutorialOverlay != null) {
+                    tutorialOverlay.setVisibility(View.GONE);
+                }
+                pref.setTutorialDone(true);
+            });
+        }
 
         loadPending();
         
-        if (!pref.isTutorialDone() && !pending.isEmpty()) {
+        if (tutorialOverlay != null && !pref.isTutorialDone() && !pending.isEmpty()) {
             tutorialOverlay.setVisibility(View.VISIBLE);
         }
     }
 
     private void loadPending() {
-        pending = dao.getPendingToday(today);
-        cardStackContainer.removeAllViews();
+        if (!isAdded()) return;
+
+        pending = new ArrayList<>();
+        if (dao != null) {
+            try {
+                List<TodoEntity> list = dao.getPendingToday(today);
+                if (list != null) pending = list;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (cardStackContainer != null) {
+            cardStackContainer.removeAllViews();
+        }
 
         if (pending.isEmpty()) {
-            tvHint.setVisibility(View.GONE);
+            if (tvHint != null) tvHint.setVisibility(View.GONE);
             showEmptyState();
             return;
         }
 
-        tvHint.setVisibility(View.VISIBLE);
-        emptyState.setVisibility(View.GONE);
+        if (tvHint != null) tvHint.setVisibility(View.VISIBLE);
+        if (emptyState != null) emptyState.setVisibility(View.GONE);
+
         int count = Math.min(pending.size(), 3);
         for (int i = count - 1; i >= 0; i--) {
             addCard(pending.get(i), i);
@@ -104,34 +152,32 @@ public class TodayFragment extends Fragment {
     }
 
     private void addCard(TodoEntity todo, int stackIndex) {
+        if (cardStackContainer == null || !isAdded()) return;
+
         View card = LayoutInflater.from(requireContext()).inflate(R.layout.item_card, cardStackContainer, false);
         TextView emoji = card.findViewById(R.id.tvEmoji);
         TextView title = card.findViewById(R.id.tvTitle);
         LinearLayout root = card.findViewById(R.id.cardRoot);
 
-        emoji.setText(todo.emoji);
-        title.setText(todo.title);
+        if (emoji != null) emoji.setText(todo.emoji);
+        if (title != null) title.setText(todo.title);
 
-        try {
-            int baseColor = Color.parseColor(todo.bgColor);
-            float[] hsv = new float[3];
-            Color.colorToHSV(baseColor, hsv);
-            hsv[2] *= 0.8f; // Darken for gradient
-            int darkColor = Color.HSVToColor(hsv);
-            
-            GradientDrawable gd = new GradientDrawable(
-                    GradientDrawable.Orientation.TOP_BOTTOM,
-                    new int[] {baseColor, darkColor});
-            gd.setCornerRadius(0); // CardView handles corners
-            root.setBackground(gd);
-
-            // Styling the Focus for today text
-            TextView header = getView().findViewById(R.id.tvHeader);
-            if (header != null) {
-                header.setLetterSpacing(-0.02f);
+        if (root != null) {
+            try {
+                int baseColor = Color.parseColor(todo.bgColor != null ? todo.bgColor : "#d4a373");
+                float[] hsv = new float[3];
+                Color.colorToHSV(baseColor, hsv);
+                hsv[2] *= 0.8f;
+                int darkColor = Color.HSVToColor(hsv);
+                
+                GradientDrawable gd = new GradientDrawable(
+                        GradientDrawable.Orientation.TOP_BOTTOM,
+                        new int[] {baseColor, darkColor});
+                gd.setCornerRadius(0);
+                root.setBackground(gd);
+            } catch (Exception e) {
+                root.setBackgroundColor(Color.parseColor("#d4a373"));
             }
-        } catch (Exception e) {
-            root.setBackgroundColor(Color.parseColor("#d4a373"));
         }
 
         float scale = 1f - (stackIndex * 0.05f);
@@ -173,7 +219,7 @@ public class TodayFragment extends Fragment {
                     float finalX = v.getTranslationX();
                     if (Math.abs(finalX) > 160) {
                         boolean right = finalX > 0;
-                        if (right) SoundManager.playDone(requireContext());
+                        if (right) SoundManager.playRight(requireContext());
                         else SoundManager.playThrow(requireContext());
                         flyOut(v, right, todo);
                     } else {
@@ -202,9 +248,15 @@ public class TodayFragment extends Fragment {
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        cardStackContainer.removeView(card);
-                        if (right) {
-                            dao.insertCompletion(new CompletionEntity(todo.id, today));
+                        if (cardStackContainer != null) {
+                            cardStackContainer.removeView(card);
+                        }
+                        if (right && dao != null) {
+                            try {
+                                dao.insertCompletion(new CompletionEntity(todo.id, today));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                         pending.remove(todo);
                         hasClearedItemsThisSession = true;
@@ -215,9 +267,11 @@ public class TodayFragment extends Fragment {
     }
 
     private void rebuildStack() {
-        cardStackContainer.removeAllViews();
+        if (cardStackContainer != null) {
+            cardStackContainer.removeAllViews();
+        }
         if (pending.isEmpty()) {
-            if (hasClearedItemsThisSession) {
+            if (hasClearedItemsThisSession && isAdded()) {
                 SoundManager.playCompleted(requireContext());
             }
             showEmptyState();
@@ -230,48 +284,65 @@ public class TodayFragment extends Fragment {
     }
 
     private void showEmptyState() {
+        if (emptyState == null || !isAdded()) return;
         emptyState.setVisibility(View.VISIBLE);
         ImageView imgMascot = emptyState.findViewById(R.id.imgMascot);
         
-        // Character level animation
-        imgMascot.setPivotY(imgMascot.getHeight());
-        imgMascot.animate()
-                .scaleX(1.1f)
-                .scaleY(0.9f)
-                .translationY(20f)
-                .rotation(5f)
-                .setDuration(600)
-                .setInterpolator(new OvershootInterpolator())
-                .withEndAction(() -> imgMascot.animate()
-                        .scaleX(1.0f)
-                        .scaleY(1.0f)
-                        .translationY(0f)
-                        .rotation(0f)
-                        .setDuration(600)
-                        .setInterpolator(new OvershootInterpolator())
-                        .start())
-                .start();
+        if (imgMascot != null) {
+            imgMascot.setImageResource(pref.getMascotDrawableRes());
+            playMascotJumpAnimation(imgMascot);
+        }
 
-        String[] quotes = getResources().getStringArray(R.array.motivational_quotes);
-        int dayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
-        tvEmptyQuote.setText(quotes[dayOfYear % quotes.length]);
+        try {
+            String[] quotes = getResources().getStringArray(R.array.motivational_quotes);
+            if (quotes.length > 0 && tvEmptyQuote != null) {
+                int dayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+                tvEmptyQuote.setText(quotes[dayOfYear % quotes.length]);
+            }
+        } catch (Exception ignored) {}
 
-        if (hasClearedItemsThisSession) {
-            tvEmptyTitle.setText(R.string.empty_done);
-        } else {
-            // Check if there are ANY todos at all
-            if (dao.getTodoCount() == 0) {
-                tvEmptyTitle.setText(R.string.empty_welcome);
-                tvEmptyQuote.setText(R.string.empty_first_goal);
+        if (tvEmptyTitle != null) {
+            if (hasClearedItemsThisSession) {
+                tvEmptyTitle.setText(R.string.empty_done);
             } else {
-                tvEmptyTitle.setText(R.string.empty_clear);
+                int count = 0;
+                if (dao != null) {
+                    try {
+                        count = dao.getTodoCount();
+                    } catch (Exception ignored) {}
+                }
+                if (count == 0) {
+                    tvEmptyTitle.setText(R.string.empty_welcome);
+                    if (tvEmptyQuote != null) tvEmptyQuote.setText(R.string.empty_first_goal);
+                } else {
+                    tvEmptyTitle.setText(R.string.empty_clear);
+                }
             }
         }
+    }
+
+    private void playMascotJumpAnimation(ImageView imgMascot) {
+        if (imgMascot == null) return;
+        imgMascot.setPivotY(imgMascot.getHeight());
+        imgMascot.animate()
+                .translationY(-14f)
+                .scaleX(1.03f)
+                .scaleY(0.97f)
+                .setDuration(400)
+                .setInterpolator(new DecelerateInterpolator())
+                .withEndAction(() -> imgMascot.animate()
+                        .translationY(0f)
+                        .scaleX(1.0f)
+                        .scaleY(1.0f)
+                        .setDuration(400)
+                        .setInterpolator(new OvershootInterpolator(1.2f))
+                        .start())
+                .start();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (dao != null) loadPending();
+        if (isAdded()) loadPending();
     }
 }

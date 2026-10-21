@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Gradient background -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#FFFF9EC7"
+                android:endColor="#FFFFB347"
+                android:angle="135" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+
+    <!-- Minimal rounded paper-plane icon -->
+    <item
+        android:width="25dp"
+        android:height="25dp"
+        android:gravity="center">
+
+        <rotate
+            android:fromDegrees="5"
+            android:toDegrees="5">
+
+            <vector
+                android:width="24dp"
+                android:height="24dp"
+                android:viewportWidth="24"
+                android:viewportHeight="24">
+
+                <path
+                    android:fillColor="@android:color/transparent"
+                    android:strokeColor="#FFFFFFFF"
+                    android:strokeWidth="1.8"
+                    android:strokeLineCap="round"
+                    android:strokeLineJoin="round"
+                    android:pathData="M3,11.2 L21,3.5 L14,21 L10.5,13.5 Z" />
+
+                <path
+                    android:fillColor="@android:color/transparent"
+                    android:strokeColor="#FFFFFFFF"
+                    android:strokeWidth="1.8"
+                    android:strokeLineCap="round"
+                    android:strokeLineJoin="round"
+                    android:pathData="M10.5,13.5 L21,3.5" />
+
+            </vector>
+        </rotate>
+    </item>
+
+</layer-list>

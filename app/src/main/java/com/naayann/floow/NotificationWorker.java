@@ -54,33 +54,63 @@ public class NotificationWorker extends Worker {
 
         Random random = new Random();
 
-        if (hour >= 6 && hour < 12) {
+        if (hour >= 8 && hour < 13) {
             slot = today + "_MORNING";
-            title = "Morning Reality Check ⏰";
+            title = "Ready to start?";
             String[] messages = {
-                "Your goals are gathering dust while you waste hours. Get up and swipe before today becomes another regret.",
-                "Tick-tock. Another morning wasted means another day you fall behind everyone else. Are you going to just watch time slip away?",
-                "Wake up! Your dreams won't build themselves. If you leave your tasks untouched today, you're choosing failure."
+                    "Your goals won't chase themselves.",
+                    "Potential is cute. Progress is better.",
+                    "Still scrolling? Your future's waiting.",
+                    "That syllabus isn't getting smaller.",
+                    "Mood optional. Show up.",
+                    "Study now. Flex later.",
+                    "Less excuses. More receipts.",
+                    "Your comeback starts today.",
+                    "Win the morning. Own the day.",
+                    "Five minutes. Prove it.",
+                    "Someone's getting ahead. Why not you?",
+                    "Future you is taking notes.",
+                    "Don't let another day ghost your goals.",
+                    "A little grind. A lot less panic.",
+                    "One task ahead of yesterday."
             };
             message = messages[random.nextInt(messages.length)];
-        } else if (hour >= 12 && hour < 18) {
+        } else if (hour >= 13 && hour < 19) {
             slot = today + "_AFTERNOON";
-            title = "Afternoon Warning ⚠️";
+            title = "Afternoon Check!";
             String[] messages = {
-                "Half the day is gone. Your tasks are still staring at you. Are you really going to let laziness win again today?",
-                "The clock is ticking and your goals are untouched. Do you even care about your future, or is quitting your habit?",
-                "The afternoon slump is no excuse. Your unfinished tasks are judging you. Swipe them now before it's too late!"
+                    "Half the day's gone. Move.",
+                    "Your goals won't wait.",
+                    "Others are grinding. You in? 👀",
+                    "Stop scrolling. Start winning.",
+                    "Deadlines don't care.",
+                    "Make the comeback. 🔥",
+                    "Less excuses. More progress.",
+                    "Still time to get ahead.",
+                    "Don't waste today.",
+                    "Lock in. Thank yourself later."
+            };
+            message = messages[random.nextInt(messages.length)];
+        } else if (hour >= 19) {
+            slot = today + "_NIGHT";
+            title = "Wrap-up!";
+            String[] messages = {
+                    "They're ahead. Catch up. 👀",
+                    "One task. No regrets.",
+                    "Don't sleep on your goals.",
+                    "Tomorrow starts tonight. 🔥",
+                    "Still time. Don't waste it.",
+                    "Your streak is on the line.",
+                    "Finish now. Flex tomorrow.",
+                    "Sleep later. Win first. ⚡",
+                    "Don't let today beat you.",
+                    "Last chance to lock in."
             };
             message = messages[random.nextInt(messages.length)];
         } else {
-            slot = today + "_NIGHT";
-            title = "Night Alert: Final Warning 🚨";
-            String[] messages = {
-                "The day is ending, and you failed to finish your goals. Another day lost forever. How much longer will you disappoint yourself?",
-                "Night falls, and your tasks remain mocking you. Tomorrow you'll regret doing nothing today. Fix it right now.",
-                "Bedtime is approaching, and your list is still red with neglect. Sleep knowing you gave up today? Or prove you're not a quitter."
-            };
-            message = messages[random.nextInt(messages.length)];
+            slot = today + "_EXTRA";
+            title = "Floww Reminder ⚡";
+            message = "Stay focused on your goals today!";
         }
 
         // Check if we already sent notification for this slot today

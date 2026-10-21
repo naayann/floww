@@ -50,6 +50,7 @@ public class MultiplierAdapter extends RecyclerView.Adapter<MultiplierAdapter.VH
         h.emoji.setText(item.todo.emoji);
         h.title.setText(item.todo.title);
         h.multiplier.setText(String.valueOf(item.count));
+        h.subtitle.setText(item.todo.category != null ? item.todo.category : "my activity");
 
         try {
             int color = Color.parseColor(item.todo.bgColor);

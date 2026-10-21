@@ -6,28 +6,28 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.naayann.floow.MainActivity;
 import com.naayann.floow.R;
 import com.naayann.floow.data.AppDatabase;
 import com.naayann.floow.data.JournalDao;
 import com.naayann.floow.data.JournalEntity;
 import com.naayann.floow.utils.SoundManager;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,8 +36,11 @@ public class JournalFragment extends Fragment {
     private JournalDao dao;
     private RecyclerView rvJournals;
     private LinearLayout emptyState;
-    private ExtendedFloatingActionButton btnAddJournal;
-    private String selectedColor = "#FFF9C4"; // Default soft yellow
+    private FloatingActionButton btnAddJournal;
+    private TextView tvEntryCount;
+    private EditText etSearchNotes;
+
+    private List<JournalEntity> allJournals = new ArrayList<>();
 
     @Nullable
     @Override
@@ -49,59 +52,151 @@ public class JournalFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        dao = AppDatabase.getInstance(requireContext()).journalDao();
+        if (requireActivity() instanceof MainActivity) {
+            ((MainActivity) requireActivity()).setBottomNavVisible(false);
+        }
+
+        try {
+            dao = AppDatabase.getInstance(requireContext()).journalDao();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         rvJournals = view.findViewById(R.id.rvJournals);
         emptyState = view.findViewById(R.id.emptyState);
         btnAddJournal = view.findViewById(R.id.btnAddJournal);
+        tvEntryCount = view.findViewById(R.id.tvEntryCount);
+        etSearchNotes = view.findViewById(R.id.etSearchNotes);
 
-        rvJournals.setLayoutManager(new LinearLayoutManager(requireContext()));
+        ImageButton btnBack = view.findViewById(R.id.btnBack);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> {
+                SoundManager.playTap(requireContext());
+                if (getParentFragmentManager().getBackStackEntryCount() > 0) {
+                    getParentFragmentManager().popBackStack();
+                } else if (requireActivity() instanceof MainActivity) {
+                    ((MainActivity) requireActivity()).selectHomeTab();
+                }
+            });
+        }
 
-        btnAddJournal.setOnClickListener(v -> {
-            SoundManager.playTap(requireContext());
-            showAddJournalDialog();
-        });
+        if (rvJournals != null) {
+            rvJournals.setLayoutManager(new LinearLayoutManager(requireContext()));
+        }
+
+        if (btnAddJournal != null) {
+            btnAddJournal.setOnClickListener(v -> {
+                SoundManager.playTap(requireContext());
+                openJournalEntry(null);
+            });
+        }
+
+        if (emptyState != null) {
+            emptyState.setOnClickListener(v -> {
+                SoundManager.playTap(requireContext());
+                openJournalEntry(null);
+            });
+        }
+
+        if (etSearchNotes != null) {
+            etSearchNotes.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    filterJournals(s.toString());
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {}
+            });
+        }
 
         loadJournals();
     }
 
+    private void openJournalEntry(@Nullable JournalEntity journal) {
+        if (!isAdded()) return;
+        JournalEntryFragment fragment = journal != null ? JournalEntryFragment.newInstance(journal.id) : new JournalEntryFragment();
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(R.anim.note_enter, R.anim.note_exit, R.anim.note_enter, R.anim.note_exit)
+                .replace(R.id.fragmentContainer, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
     private void loadJournals() {
-        List<JournalEntity> list = dao.getAllJournals();
-        if (list.isEmpty()) {
-            rvJournals.setVisibility(View.GONE);
-            emptyState.setVisibility(View.VISIBLE);
+        if (!isAdded()) return;
+
+        allJournals = new ArrayList<>();
+        if (dao != null) {
+            try {
+                List<JournalEntity> all = dao.getAllJournals();
+                if (all != null) allJournals = all;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        String currentSearch = etSearchNotes != null ? etSearchNotes.getText().toString() : "";
+        filterJournals(currentSearch);
+    }
+
+    private void filterJournals(String query) {
+        if (!isAdded()) return;
+
+        List<JournalEntity> filtered = new ArrayList<>();
+        if (query == null || query.trim().isEmpty()) {
+            filtered.addAll(allJournals);
         } else {
-            rvJournals.setVisibility(View.VISIBLE);
-            emptyState.setVisibility(View.GONE);
-            JournalAdapter adapter = new JournalAdapter(list);
+            String q = query.toLowerCase(Locale.getDefault()).trim();
+            for (JournalEntity entry : allJournals) {
+                if ((entry.title != null && entry.title.toLowerCase(Locale.getDefault()).contains(q)) ||
+                    (entry.content != null && entry.content.toLowerCase(Locale.getDefault()).contains(q))) {
+                    filtered.add(entry);
+                }
+            }
+        }
+
+        if (tvEntryCount != null) {
+            int total = allJournals.size();
+            tvEntryCount.setText(total == 1 ? "1 entry" : total + " entries");
+        }
+
+        if (filtered.isEmpty()) {
+            if (rvJournals != null) rvJournals.setVisibility(View.GONE);
+            if (emptyState != null) emptyState.setVisibility(View.VISIBLE);
+        } else {
+            if (rvJournals != null) rvJournals.setVisibility(View.VISIBLE);
+            if (emptyState != null) emptyState.setVisibility(View.GONE);
+
+            JournalAdapter adapter = new JournalAdapter(filtered);
             adapter.setOnJournalClickListener(new JournalAdapter.OnJournalClickListener() {
                 @Override
                 public void onJournalClick(JournalEntity journal) {
                     SoundManager.playTap(requireContext());
-                    showViewJournalDialog(journal);
+                    openJournalEntry(journal);
                 }
 
                 @Override
                 public void onJournalLongClick(JournalEntity journal) {
                     SoundManager.playThrow(requireContext());
-                    new MaterialAlertDialogBuilder(requireContext())
-                            .setTitle("Delete entry?")
-                            .setMessage("“" + journal.title + "” will be removed.")
-                            .setPositiveButton("Delete", (dialog, which) -> {
-                                dao.deleteJournal(journal);
-                                loadJournals();
-                                Toast.makeText(requireContext(), "Entry deleted", Toast.LENGTH_SHORT).show();
-                            })
-                            .setNegativeButton("Keep", null)
-                            .show();
+                    showDeleteJournalDialog(journal);
                 }
             });
-            rvJournals.setAdapter(adapter);
+
+            if (rvJournals != null) {
+                rvJournals.setAdapter(adapter);
+            }
         }
     }
 
-    private void showAddJournalDialog() {
-        View v = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_journal, null);
+    private void showDeleteJournalDialog(JournalEntity journal) {
+        if (!isAdded()) return;
+
+        View v = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_delete_confirm, null);
         AlertDialog dialog = new AlertDialog.Builder(requireContext())
                 .setView(v)
                 .create();
@@ -111,100 +206,49 @@ public class JournalFragment extends Fragment {
             dialog.getWindow().setDimAmount(0.7f);
         }
 
-        EditText etTitle = v.findViewById(R.id.etJournalTitle);
-        EditText etContent = v.findViewById(R.id.etJournalContent);
-        MaterialButton btnSave = v.findViewById(R.id.btnSaveJournal);
-        ImageView btnClose = v.findViewById(R.id.btnClose);
+        TextView tvTitle = v.findViewById(R.id.tvDeleteTitle);
+        TextView tvMessage = v.findViewById(R.id.tvDeleteMessage);
+        View btnCancel = v.findViewById(R.id.btnCancelDelete);
+        View btnConfirm = v.findViewById(R.id.btnConfirmDelete);
 
-        selectedColor = "#FFF9C4"; // Default soft yellow
+        if (tvTitle != null) tvTitle.setText("Delete entry?");
+        if (tvMessage != null) tvMessage.setText("“" + journal.title + "” will be permanently removed.");
 
-        View[] colors = {
-            v.findViewById(R.id.color1),
-            v.findViewById(R.id.color2),
-            v.findViewById(R.id.color3),
-            v.findViewById(R.id.color4),
-            v.findViewById(R.id.color5)
-        };
-
-        String[] hexColors = {"#FFF9C4", "#FFE5F1FF", "#FFE5F9E0", "#FFFFE5E5", "#FFF3E5F5"};
-
-        for (int i = 0; i < colors.length; i++) {
-            final int index = i;
-            colors[i].setOnClickListener(cv -> {
+        if (btnCancel != null) {
+            btnCancel.setOnClickListener(view -> {
                 SoundManager.playTap(requireContext());
-                selectedColor = hexColors[index];
-                for (View c : colors) c.setAlpha(0.5f);
-                colors[index].setAlpha(1.0f);
+                dialog.dismiss();
             });
-            colors[i].setAlpha(i == 0 ? 1.0f : 0.5f);
         }
 
-        TextWatcher textWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                boolean hasText = etTitle.getText().toString().trim().length() > 0 &&
-                                  etContent.getText().toString().trim().length() > 0;
-                btnSave.setEnabled(hasText);
-                btnSave.setAlpha(hasText ? 1.0f : 0.5f);
-            }
-            @Override
-            public void afterTextChanged(Editable s) {}
-        };
-
-        etTitle.addTextChangedListener(textWatcher);
-        etContent.addTextChangedListener(textWatcher);
-
-        btnClose.setOnClickListener(view -> {
-            SoundManager.playTap(requireContext());
-            dialog.dismiss();
-        });
-
-        btnSave.setOnClickListener(view -> {
-            String title = etTitle.getText().toString().trim();
-            String content = etContent.getText().toString().trim();
-            if (title.isEmpty() || content.isEmpty()) return;
-
-            String dateStr = new SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault()).format(new Date());
-            dao.insertJournal(new JournalEntity(title, content, dateStr, selectedColor));
-            SoundManager.playPop(requireContext());
-            Toast.makeText(requireContext(), "Journal saved ☕", Toast.LENGTH_SHORT).show();
-            loadJournals();
-            dialog.dismiss();
-        });
+        if (btnConfirm != null) {
+            btnConfirm.setOnClickListener(view -> {
+                SoundManager.playThrow(requireContext());
+                if (dao != null) {
+                    try {
+                        dao.deleteJournal(journal);
+                    } catch (Exception ignored) {}
+                }
+                loadJournals();
+                Toast.makeText(requireContext(), "Entry deleted", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            });
+        }
 
         dialog.show();
-
-        v.setAlpha(0f);
-        v.setScaleX(0.7f);
-        v.setScaleY(0.7f);
-        v.animate()
-                .alpha(1f)
-                .scaleX(1f)
-                .scaleY(1f)
-                .setDuration(400)
-                .setInterpolator(new OvershootInterpolator(1.2f))
-                .start();
     }
 
-    private void showViewJournalDialog(JournalEntity journal) {
-        new MaterialAlertDialogBuilder(requireContext())
-                .setTitle(journal.title)
-                .setMessage(journal.date + "\n\n" + journal.content)
-                .setPositiveButton("Close", null)
-                .setNeutralButton("Delete", (dialog, which) -> {
-                    SoundManager.playThrow(requireContext());
-                    dao.deleteJournal(journal);
-                    loadJournals();
-                    Toast.makeText(requireContext(), "Entry deleted", Toast.LENGTH_SHORT).show();
-                })
-                .show();
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        loadJournals();
+        if (requireActivity() instanceof MainActivity) {
+            ((MainActivity) requireActivity()).setBottomNavVisible(false);
+        }
+        if (isAdded()) loadJournals();
     }
 }

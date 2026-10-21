@@ -37,4 +37,10 @@ public interface TodoDao {
 
     @Query("SELECT DISTINCT date FROM completions ORDER BY date DESC")
     List<String> getCompletionDates();
+
+    @Query("SELECT COUNT(*) FROM completions")
+    int getTotalCompletionsCount();
+
+    @Query("SELECT COUNT(*) FROM completions WHERE date = :date")
+    int getCompletionsCountForDate(String date);
 }

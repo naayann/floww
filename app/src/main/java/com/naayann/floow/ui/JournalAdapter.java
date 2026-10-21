@@ -72,9 +72,9 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.VH> {
 
         VH(View v) {
             super(v);
-            tvDate = v.findViewById(R.id.tvDate);
-            tvTitle = v.findViewById(R.id.tvTitle);
-            tvContentPreview = v.findViewById(R.id.tvContentPreview);
+            tvDate = v.findViewById(R.id.tvJournalDate);
+            tvTitle = v.findViewById(R.id.tvJournalTitle);
+            tvContentPreview = v.findViewById(R.id.tvJournalContent);
             cardBackground = v.findViewById(R.id.cardBackground);
         }
     }

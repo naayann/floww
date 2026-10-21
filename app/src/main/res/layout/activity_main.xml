@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background">
 
+    <!-- Main content -->
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="0dp"
@@ -14,87 +16,64 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Container for floating navigation -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        app:layout_constraintBottom_toBottomOf="parent">
+    <!-- Compact floating bottom navbar -->
+    <LinearLayout
+        android:id="@+id/bottomNavPill"
+        android:layout_width="wrap_content"
+        android:layout_height="68dp"
+        android:layout_marginBottom="22dp"
+        android:background="@drawable/bg_nav_pill"
+        android:elevation="10dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:id="@+id/bottomNavPill"
-            android:layout_width="0dp"
-            android:layout_height="64dp"
-            android:background="@drawable/bg_nav_pill"
-            android:elevation="0dp"
-            android:outlineProvider="background"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingHorizontal="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btnPlus"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginEnd="12dp">
+        <!-- Home -->
+        <ImageView
+            android:id="@+id/navHome"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_nav_item_active"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="13dp"
+            android:src="@drawable/ic_nav_home"
+            android:contentDescription="Home"
+            android:scaleType="fitCenter"
+            app:tint="@color/nav_active" />
 
-            <ImageView
-                android:id="@+id/navHome"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="18dp"
-                android:src="@drawable/ic_nav_home"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/nav_active" />
-
-            <ImageView
-                android:id="@+id/navJournal"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="18dp"
-                android:src="@drawable/ic_nav_journal"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/nav_inactive" />
-
-            <ImageView
-                android:id="@+id/navNotifications"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="18dp"
-                android:src="@drawable/ic_nav_notifications"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/nav_inactive" />
-
-            <ImageView
-                android:id="@+id/navProfile"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="18dp"
-                android:src="@drawable/ic_nav_layers"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/nav_inactive" />
-        </LinearLayout>
-
-        <FrameLayout
+        <!-- Add Goal -->
+        <ImageView
             android:id="@+id/btnPlus"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="12dp"
             android:background="@drawable/bg_plus_button"
-            android:elevation="0dp"
-            android:outlineProvider="background"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="13dp"
+            android:src="@drawable/ic_plus"
+            android:contentDescription="Add Goal"
+            android:scaleType="fitCenter"
+            app:tint="@color/white" />
 
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_plus"
-                app:tint="@color/white" />
-        </FrameLayout>
+        <!-- Profile -->
+        <ImageView
+            android:id="@+id/navProfile"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_nav_item_inactive"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="13dp"
+            android:src="@drawable/ic_manage_profile"
+            android:contentDescription="Profile"
+            android:scaleType="fitCenter"
+            app:tint="@color/nav_inactive" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

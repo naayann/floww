@@ -9,63 +9,76 @@ import android.os.VibratorManager;
 import com.naayann.floow.R;
 
 public class SoundManager {
-    
+
     public static void playSound(Context context, int resId, float volume) {
+        if (context == null) return;
         try {
-            MediaPlayer mp = MediaPlayer.create(context, resId);
-            mp.setVolume(volume, volume);
-            mp.setOnCompletionListener(MediaPlayer::release);
-            mp.start();
+            MediaPlayer mp = MediaPlayer.create(context.getApplicationContext(), resId);
+            if (mp != null) {
+                mp.setVolume(volume, volume);
+                mp.setOnCompletionListener(mediaPlayer -> {
+                    try {
+                        mediaPlayer.release();
+                    } catch (Exception ignored) {}
+                });
+                mp.start();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static void vibrate(Context context, long duration) {
-        Vibrator vibrator;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            VibratorManager vibratorManager = (VibratorManager) context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
-            vibrator = vibratorManager.getDefaultVibrator();
-        } else {
-            vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        }
-
-        if (vibrator != null && vibrator.hasVibrator()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vibrator.vibrate(VibrationEffect.createOneShot(duration, VibrationEffect.DEFAULT_AMPLITUDE));
+        if (context == null) return;
+        try {
+            Vibrator vibrator;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                VibratorManager vibratorManager = (VibratorManager) context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
+                if (vibratorManager == null) return;
+                vibrator = vibratorManager.getDefaultVibrator();
             } else {
-                vibrator.vibrate(duration);
+                vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
             }
+
+            if (vibrator != null && vibrator.hasVibrator()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(duration, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    vibrator.vibrate(duration);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public static void playWelcome(Context context) {
-        playSound(context, R.raw.new_welcome, 1.0f); // 1.0 is full, welcome is boosted (assumed original was lower)
+        playSound(context, R.raw.magical_notification, 1.0f);
     }
 
     public static void playTap(Context context) {
-        playSound(context, R.raw.button_tap, 0.5f); // Reduced volume
-        vibrate(context, 10); // Very short tap vibration
+        playSound(context, R.raw.tactile_click, 0.1f);
+        vibrate(context, 5);
     }
 
     public static void playPop(Context context) {
-        playSound(context, R.raw.pop_button, 0.8f);
+        playSound(context, R.raw.ui_pop3, 0.8f);
         vibrate(context, 20);
     }
 
     public static void playThrow(Context context) {
-        playSound(context, R.raw.done, 0.8f);
+        playSound(context, R.raw.ui_sound, 0.5f);
         vibrate(context, 30);
     }
 
-    public static void playFahh(Context context) {
-        playSound(context, R.raw.fahh, 1.0f);
+    public static void playRight(Context context) {
+        playSound(context, R.raw.good_girl, 1.0f);
         vibrate(context, 15);
     }
 
     public static void playDone(Context context) {
-        playSound(context, R.raw.delete_sound, 1.0f);
-        vibrate(context, 40); // Stronger vibration for success
+        playSound(context, R.raw.ui_close, 0.4f);
+        vibrate(context, 40);
     }
 
     public static void playCompleted(Context context) {

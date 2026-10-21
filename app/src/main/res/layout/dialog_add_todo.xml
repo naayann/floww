@@ -1,165 +1,281 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardCornerRadius="32dp"
-    app:cardElevation="0dp"
-    android:layout_margin="16dp">
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:fillViewport="true"
+    android:clipToPadding="false"
+    android:overScrollMode="never">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="16dp">
 
-        <RelativeLayout
+        <!-- Close button -->
+        <ImageView
+            android:id="@+id/btnClose"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="start"
+            android:layout_marginBottom="12dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_close"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Close"
+            app:tint="@color/white" />
+
+        <!-- Sticky note area -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardStickyNote"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="220dp"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#D4A373">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/mascotContainer"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                app:cardCornerRadius="16dp"
-                app:cardBackgroundColor="#020300"
-                app:cardElevation="0dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="24dp">
 
-                <ImageView
-                    android:id="@+id/imgMascot"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_mascot" />
-            </androidx.cardview.widget.CardView>
+                <!-- Emoji input -->
+                <EditText
+                    android:id="@+id/etEmoji"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:background="@drawable/bg_emoji_input"
+                    android:gravity="center"
+                    android:hint="✨"
+                    android:inputType="textShortMessage"
+                    android:textSize="26sp"
+                    android:maxLength="2"
+                    android:contentDescription="Emoji Icon" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/mascotContainer"
-                android:layout_marginStart="16dp"
-                android:layout_centerVertical="true"
-                android:text="Add To-Do"
-                android:textColor="@color/text_primary"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+                <!-- Note title/content -->
+                <EditText
+                    android:id="@+id/etTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/etEmoji"
+                    android:layout_marginTop="16dp"
+                    android:background="@null"
+                    android:gravity="top|start"
+                    android:hint="Add text to this note"
+                    android:textColorHint="#80000000"
+                    android:textSize="22sp"
+                    android:textColor="@color/text_primary"
+                    android:fontFamily="sans-serif"
+                    android:textStyle="bold"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLines="5" />
 
-            <ImageView
-                android:id="@+id/btnClose"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_alignParentEnd="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="6dp"
-                android:src="@drawable/ic_close"
-                android:layout_centerVertical="true"
-                app:tint="@color/text_secondary" />
-        </RelativeLayout>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <EditText
-                android:id="@+id/etEmoji"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:background="@drawable/bg_emoji_input"
-                android:gravity="center"
-                android:hint="✨"
-                android:inputType="textShortMessage"
-                android:textSize="24sp"
-                android:maxLength="2" />
-
-            <EditText
-                android:id="@+id/etTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="16dp"
-                android:background="@null"
-                android:hint="e.g. Drink Water"
-                android:textColorHint="#C7C7CC"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif-medium"
-                android:inputType="textCapSentences" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="24dp"
-            android:background="#F2F2F7" />
-
-        <LinearLayout
+        <!-- Bottom options panel -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/white">
 
-            <View
-                android:id="@+id/color1"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp"
-                android:background="@drawable/circle_brown"
-                android:clickable="true"
-                android:focusable="true" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
 
-            <View
-                android:id="@+id/color2"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp"
-                android:background="@drawable/circle_blue"
-                android:clickable="true"
-                android:focusable="true" />
+                <!-- Note color heading -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Note color"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_secondary"
+                    android:fontFamily="sans-serif-medium" />
 
-            <View
-                android:id="@+id/color3"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp"
-                android:background="@drawable/circle_green"
-                android:clickable="true"
-                android:focusable="true" />
+                <!-- Color choices -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-            <View
-                android:id="@+id/color4"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp"
-                android:background="@drawable/circle_pink"
-                android:clickable="true"
-                android:focusable="true" />
+                    <View
+                        android:id="@+id/color1"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/circle_yellow"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:contentDescription="Yellow note" />
 
-            <View
-                android:id="@+id/color5"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp"
-                android:background="@drawable/circle_purple"
-                android:clickable="true"
-                android:focusable="true" />
-        </LinearLayout>
+                    <View
+                        android:id="@+id/color2"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/circle_blue"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:contentDescription="Blue note" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSave"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="24dp"
-            android:text="Create Card"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:backgroundTint="@color/accent"
-            app:cornerRadius="18dp" />
+                    <View
+                        android:id="@+id/color3"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/circle_green"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:contentDescription="Green note" />
+
+                    <View
+                        android:id="@+id/color4"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/circle_pink"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:contentDescription="Pink note" />
+
+                    <View
+                        android:id="@+id/color5"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="@drawable/circle_purple"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:contentDescription="Purple note" />
+
+                </LinearLayout>
+
+                <!-- Category heading -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="Category"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_secondary"
+                    android:fontFamily="sans-serif-medium" />
+
+                <!-- Scrollable category chips -->
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:paddingBottom="4dp"
+                    android:clipToPadding="false"
+                    android:scrollbars="none"
+                    android:fillViewport="false"
+                    android:overScrollMode="never">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <!-- Add category -->
+                        <TextView
+                            android:id="@+id/chipAddCategory"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:layout_marginEnd="8dp"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:background="@drawable/bg_rounded_edit"
+                            android:text="+"
+                            android:textAlignment="center"
+                            android:textSize="23sp"
+                            android:textColor="@color/text_primary"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:contentDescription="Add category" />
+
+                        <!-- Focus -->
+                        <TextView
+                            android:id="@+id/chipFocus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="44dp"
+                            android:layout_marginEnd="8dp"
+                            android:gravity="center"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:background="@drawable/bg_rounded_edit"
+                            android:text="Focus"
+                            android:textSize="13sp"
+                            android:textColor="@color/text_primary"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <!-- Health -->
+                        <TextView
+                            android:id="@+id/chipHealth"
+                            android:layout_width="wrap_content"
+                            android:layout_height="44dp"
+                            android:layout_marginEnd="8dp"
+                            android:gravity="center"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:background="@drawable/bg_rounded_edit"
+                            android:text="Health"
+                            android:textSize="13sp"
+                            android:textColor="@color/text_primary"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <!-- Work -->
+                        <TextView
+                            android:id="@+id/chipWork"
+                            android:layout_width="wrap_content"
+                            android:layout_height="44dp"
+                            android:gravity="center"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:background="@drawable/bg_rounded_edit"
+                            android:text="Work"
+                            android:textSize="13sp"
+                            android:textColor="@color/text_primary"
+                            android:fontFamily="sans-serif-medium" />
+
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <!-- Save button -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSave"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:text="Save"
+                        android:textAllCaps="false"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif"
+                        android:backgroundTint="@color/button_dark"
+                        android:textColor="@color/white"
+                        app:cornerRadius="16dp"
+                        app:elevation="0dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</ScrollView>

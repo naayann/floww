@@ -27,7 +27,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Back"
                 android:padding="8dp"
-                android:src="@drawable/ic_close"
+                android:src="@drawable/ic_back"
                 app:tint="@color/text_primary" />
 
             <TextView
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Streak &amp; Calendar 🔥"
+                android:text="Streak Calendar"
                 android:textColor="@color/text_primary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -95,7 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-            android:text="Activity Calendar 📅"
+            android:text="Activity"
             android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:textStyle="bold" />

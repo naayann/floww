@@ -7,11 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.button.MaterialButton;
 import com.naayann.floow.utils.PrefHelper;
 import com.naayann.floow.utils.SoundManager;
-import com.google.android.material.button.MaterialButton;
 
 public class OnboardingActivity extends AppCompatActivity {
 
@@ -24,7 +27,6 @@ public class OnboardingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_onboarding);
 
         pref = new PrefHelper(this);
         if (pref.isOnboardingDone()) {
@@ -32,11 +34,24 @@ public class OnboardingActivity extends AppCompatActivity {
             return;
         }
 
+        setContentView(R.layout.activity_onboarding);
+
         container = findViewById(R.id.onboardingContainer);
+
+        TextView tvSkip = findViewById(R.id.tvSkip);
+        if (tvSkip != null) {
+            tvSkip.setOnClickListener(v -> {
+                SoundManager.playTap(this);
+                pref.setOnboardingDone(true);
+                goToMain();
+            });
+        }
+
         showStep();
     }
 
     private void showStep() {
+        if (container == null) return;
         container.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
 
