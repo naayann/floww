@@ -216,7 +216,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
             android:fontFamily="sans-serif-bold"
-            android:text="Goal Breakdown 🎯"
+            android:text="Goal Logs"
             android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:textStyle="bold" />

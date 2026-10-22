@@ -48,7 +48,7 @@ public class StreaksActivity extends AppCompatActivity {
 
         TextView tvMonthTitle = findViewById(R.id.tvMonthTitle);
         String monthName = new SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(Calendar.getInstance().getTime());
-        tvMonthTitle.setText("Activity Calendar (" + monthName + ") 📅");
+        tvMonthTitle.setText("Activity (" + monthName + ")");
     }
 
     private List<CalendarDay> generateCurrentMonthDays(List<String> completionDates) {
